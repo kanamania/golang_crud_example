@@ -10,6 +10,7 @@ import (
 	"gorm.io/gorm"
 	"net/http"
 	"strconv"
+	"github.com/rs/cors"
 )
 
 type ItemModel struct {
@@ -164,5 +165,7 @@ func main() {
 	router.HandleFunc("/item/{id}", GetItem).Methods("GET")
 	router.HandleFunc("/item/{id}", UpdateItem).Methods("POST")
 	router.HandleFunc("/item/{id}", DeleteItem).Methods("DELETE")
-	http.ListenAndServe(":8000", router)
+
+	handler := cors.New(cors.Options{AllowedMethods: []string{"GET", "POST", "DELETE", "PATCH", "OPTIONS"}}).Handler(router)
+	http.ListenAndServe(":8000", handler)
 }
